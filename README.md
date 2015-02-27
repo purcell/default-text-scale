@@ -11,6 +11,9 @@ It works by adjusting the height of the `default` face in the
 `user` theme, which is always combined with any other loaded
 themes.
 
+It's handy for quickly adjusting the font size for readability or
+impromptu screen-sharing.
+
 ## Installation
 
 ### Manual
@@ -39,6 +42,7 @@ If you're an Emacs 24 user or you have a recent version of
 ## About
 
 Author: Steve Purcell <steve at sanityinc dot com>
+
 Homepage: https://github.com/purcell/default-text-scale
 
 This little library was extracted from the author's
