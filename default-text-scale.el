@@ -3,6 +3,7 @@
 ;; Copyright (C) 2015  Steve Purcell
 
 ;; Author: Steve Purcell <steve@sanityinc.com>
+;; URL: https://github.com/purcell/default-text-scale
 ;; Keywords: frames, faces
 ;; Package-Version: 0
 
