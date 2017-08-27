@@ -28,8 +28,10 @@
 
 ;; Usage:
 
-;;     (global-set-key (kbd "C-M-=") 'default-text-scale-increase)
-;;     (global-set-key (kbd "C-M--") 'default-text-scale-decrease)
+;; Enable the global minor mode `default-text-scale-mode' to bind
+;; C-M-= and C-M-- to `default-text-scale-increase' and
+;; `default-text-scale-decrease' respectively.  Alternatively, bind
+;; those commands directly in another map.
 
 ;;; Code:
 
@@ -87,6 +89,16 @@ the :height face attribute."
   "Decrease the height of the default face by `default-text-scale-amount'."
   (interactive)
   (default-text-scale-increment (- default-text-scale-amount)))
+
+;;;###autoload
+(define-minor-mode default-text-scale-mode
+  "Change the size of the \"default\" face in every frame."
+  :global t
+  :require 'default-text-scale
+  :keymap (let ((map (make-sparse-keymap)))
+            (define-key map (kbd "C-M-=") 'default-text-scale-increase)
+            (define-key map (kbd "C-M--") 'default-text-scale-decrease)
+            map))
 
 
 (provide 'default-text-scale)

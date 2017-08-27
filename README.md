@@ -16,28 +16,16 @@ impromptu screen-sharing.
 
 ## Installation
 
-### Manual
+Install `default-text-scale` from the [MELPA](http://melpa.org)
+repository. The version of `default-text-scale` there will always be
+up-to-date.
 
-Ensure `default-text-scale.el` is in a directory on your load-path, and
-add the following to your `~/.emacs` or `~/.emacs.d/init.el`:
+## Usage
 
-``` lisp
-(require default-text-scale)
-(global-set-key (kbd "C-M-=") 'default-text-scale-increase)
-(global-set-key (kbd "C-M--") 'default-text-scale-decrease)
-```
-
-### MELPA
-
-If you're an Emacs 24 user or you have a recent version of
-`package.el` you can install `default-text-scale` from the
-[MELPA](http://melpa.org) repository. The version of
-`default-text-scale` there will always be up-to-date.
-
-``` lisp
-(global-set-key (kbd "C-M-=") 'default-text-scale-increase)
-(global-set-key (kbd "C-M--") 'default-text-scale-decrease)
-```
+You can then customize/enable the global minor mode
+`default-text-scale-mode`, which binds <kbd>C-M-=</kbd> and
+<kbd>C-M--</kbd> by default. Alternatively, bind the corresponding
+commands yourself as desired.
 
 ## About
 
