@@ -98,10 +98,14 @@ the :height face attribute."
   (default-text-scale-increment (- default-text-scale-amount)))
 
 ;;;###autoload
-(defun default-text-scale-reset ()
-  "Reset the height of the default face."
-  (interactive)
-  (default-text-scale-increment default-text-scale--complement)
+(defun default-text-scale-reset (&optional set-current)
+  "Reset the height of the default face.
+With prefix argument SET-CURRENT, set the current size as the
+default to which subsequent sizes would be reset."
+  (interactive "P")
+  (if set-current
+      (message "Default font size set to current size.")
+    (default-text-scale-increment default-text-scale--complement))
   (setq default-text-scale--complement 0))
 
 ;;;###autoload
