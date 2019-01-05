@@ -95,14 +95,14 @@ the :height face attribute."
 (defun default-text-scale-decrease ()
   "Decrease the height of the default face by `default-text-scale-amount'."
   (interactive)
-  (default-text-scale-increment (- default-text-scale-amount))
-  (setq default-text-scale--complement 0))
+  (default-text-scale-increment (- default-text-scale-amount)))
 
 ;;;###autoload
 (defun default-text-scale-reset ()
   "Reset the height of the default face."
   (interactive)
-  (default-text-scale-increment default-text-scale--complement))
+  (default-text-scale-increment default-text-scale--complement)
+  (setq default-text-scale--complement 0))
 
 ;;;###autoload
 (define-minor-mode default-text-scale-mode
