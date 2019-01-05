@@ -46,8 +46,7 @@
   :group 'default-text-scale)
 
 (defvar default-text-scale--complement 0
-  "Internal variable to store the delta needed to get back to the
-original default face height.")
+  "Stores the delta needed to get back to the original default face height.")
 
 (defun default-text-scale-increment (delta)
   "Adjust the default font height by DELTA on every graphical frame.
