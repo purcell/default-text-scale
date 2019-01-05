@@ -80,8 +80,10 @@ the :height face attribute."
                (width . ,(round pixel-width  (frame-char-width f))))))))
       (with-selected-frame f
         (run-hooks 'after-setting-font-hook)))
-    (setq default-text-scale--complement (- default-text-scale--complement delta))
-    (message "Default font size is now %d" (/ new-height 10))))
+    (let* ((actual-new-height (face-attribute 'default :height))
+           (actual-delta (- actual-new-height cur-height)))
+      (setq default-text-scale--complement (- default-text-scale--complement actual-delta)))
+    (message "Default font size is now %d" new-height)))
 
 ;;;###autoload
 (defun default-text-scale-increase ()
@@ -93,11 +95,12 @@ the :height face attribute."
 (defun default-text-scale-decrease ()
   "Decrease the height of the default face by `default-text-scale-amount'."
   (interactive)
-  (default-text-scale-increment (- default-text-scale-amount)))
+  (default-text-scale-increment (- default-text-scale-amount))
+  (setq default-text-scale--complement 0))
 
 ;;;###autoload
 (defun default-text-scale-reset ()
-  "Resets the height of the default face."
+  "Reset the height of the default face."
   (interactive)
   (default-text-scale-increment default-text-scale--complement))
 
