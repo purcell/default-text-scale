@@ -116,7 +116,10 @@ default to which subsequent sizes would be reset."
             (define-key map (kbd "C-M-=") 'default-text-scale-increase)
             (define-key map (kbd "C-M--") 'default-text-scale-decrease)
             (define-key map (kbd "C-M-0") 'default-text-scale-reset)
-            map))
+            map)
+  (if default-text-scale-mode
+      (setq default-text-scale--complement 0)
+    (default-text-scale-reset)))
 
 
 (provide 'default-text-scale)
