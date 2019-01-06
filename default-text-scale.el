@@ -79,10 +79,16 @@ the :height face attribute."
                (width . ,(round pixel-width  (frame-char-width f))))))))
       (with-selected-frame f
         (run-hooks 'after-setting-font-hook)))
-    (let* ((actual-new-height (face-attribute 'default :height))
+    ;; This line is apparently necessary for Emacs to properly
+    ;; recalculate the face attributes in order for the
+    ;; actually-applied height to be correctly returned
+    ;; below. Evidently some visible text must be displayed (however
+    ;; briefly) for this to occur: a temp buffer is insufficient.
+    (message "Stale font size: %d" (face-attribute 'default :height (selected-frame)))
+    (let* ((actual-new-height (face-attribute 'default :height (selected-frame)))
            (actual-delta (- actual-new-height cur-height)))
-      (setq default-text-scale--complement (- default-text-scale--complement actual-delta)))
-    (message "Default font size is now %d" new-height)))
+      (setq default-text-scale--complement (- default-text-scale--complement actual-delta))
+      (message "Default font size is now %d" actual-new-height))))
 
 ;;;###autoload
 (defun default-text-scale-increase ()
