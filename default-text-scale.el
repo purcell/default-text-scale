@@ -114,6 +114,13 @@ default to which subsequent sizes would be reset."
     (default-text-scale-increment default-text-scale--complement))
   (setq default-text-scale--complement 0))
 
+(defun default-text-scale--update-for-new-frame (f)
+  "Recalculate the font size in new frames.
+This ensures new frames have the correct font size after the font
+has been set with `set-face-attribute'."
+  (when (display-multi-font-p f)
+    (face-spec-recalc 'default f)))
+
 ;;;###autoload
 (define-minor-mode default-text-scale-mode
   "Change the size of the \"default\" face in every frame."
@@ -125,7 +132,10 @@ default to which subsequent sizes would be reset."
             (define-key map (kbd "C-M-0") 'default-text-scale-reset)
             map)
   (if default-text-scale-mode
-      (setq default-text-scale--complement 0)
+      (progn
+        (add-hook 'after-make-frame-functions #'default-text-scale--update-for-new-frame)
+        (setq default-text-scale--complement 0))
+    (remove-hook 'after-make-frame-functions #'default-text-scale--update-for-new-frame)
     (default-text-scale-reset)))
 
 
