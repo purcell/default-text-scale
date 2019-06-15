@@ -49,6 +49,12 @@
 (defvar default-text-scale--complement 0
   "Stores the delta needed to get back to the original default face height.")
 
+(defun default-text-scale--update-for-new-frame (f)
+  "Update for new window, needed for new windows to have the correct font size
+after setting the font with `set-face-attribute'."
+  (when (display-multi-font-p f)
+    (face-spec-recalc 'default f)))
+
 (defun default-text-scale-increment (delta)
   "Adjust the default font height by DELTA on every graphical frame.
 The pixel size of the frame will be kept approximately the same,
@@ -125,7 +131,10 @@ default to which subsequent sizes would be reset."
             (define-key map (kbd "C-M-0") 'default-text-scale-reset)
             map)
   (if default-text-scale-mode
-      (setq default-text-scale--complement 0)
+      (progn
+        (add-hook 'after-make-frame-functions #'default-text-scale--update-for-new-frame)
+        (setq default-text-scale--complement 0))
+    (remove-hook 'after-make-frame-functions #'default-text-scale--update-for-new-frame)
     (default-text-scale-reset)))
 
 
