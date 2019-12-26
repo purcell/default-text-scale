@@ -59,34 +59,34 @@ the :height face attribute."
   (unless (display-multi-font-p (selected-frame))
     (error "Cannot adjust default text scale from a non-graphical frame"))
   (let* ((cur-height (face-attribute 'default :height))
-         (new-height (+ cur-height delta)))
-    ;; Modify the special "user" theme, which is always combined
-    ;; with any other loaded theme(s).  An alternative approach
-    ;; would be modifying the default face's face-override-spec
-    ;; property (see `face-spec-set'), but that produces more
-    ;; redraws
-    (custom-push-theme 'theme-face 'default 'user 'set `((t (:height ,new-height))))
+         (new-height (+ cur-height delta))
+         (initial-char-width (frame-char-width (selected-frame)))
+         (initial-char-height (frame-char-height (selected-frame)))
+         frame-sizes)
     (dolist (f (frame-list))
       (when (display-multi-font-p f)
-        (let ((pixel-height (* (frame-parameter f 'height)
-                               (frame-char-height f)))
-              (pixel-width  (* (frame-parameter f 'width)
-                               (frame-char-width f))))
-          (face-spec-recalc 'default f)
-          (unless (frame-parameter f 'fullscreen)
-            (modify-frame-parameters
-             f
-             `((height . ,(round pixel-height (frame-char-height f)))
-               (width . ,(round pixel-width  (frame-char-width f))))))))
-      (with-selected-frame f
-        (run-hooks 'after-setting-font-hook)))
-    ;; This line is apparently necessary for Emacs to properly
+        (unless (frame-parameter f 'fullscreen)
+          (push (list f (frame-parameter f 'height) (frame-parameter f 'width)) frame-sizes))))
+    (face-spec-set 'default `((t (:height ,new-height))))
+    (dolist (entry frame-sizes)
+      (let ((f (car entry))
+            (orig-height (nth 1 entry))
+            (orig-width (nth 2 entry)))
+        (face-spec-recalc 'default f)
+        (modify-frame-parameters
+         f
+         `((height . ,(round (* initial-char-height orig-height)
+                             (frame-char-height f)))
+           (width . ,(round (* initial-char-width orig-width)
+                            (frame-char-width f)))))
+        (with-selected-frame f
+          (run-hooks 'after-setting-font-hook))))    ;; This line is apparently necessary for Emacs to properly
     ;; recalculate the face attributes in order for the
     ;; actually-applied height to be correctly returned
     ;; below. Evidently some visible text must be displayed (however
     ;; briefly) for this to occur: a temp buffer is insufficient.
-    (message "Stale font size: %d" (face-attribute 'default :height (selected-frame)))
-    (let* ((actual-new-height (face-attribute 'default :height (selected-frame)))
+    (message "Stale font size: %d" (face-attribute 'default :height))
+    (let* ((actual-new-height (face-attribute 'default :height))
            (actual-delta (- actual-new-height cur-height)))
       (setq default-text-scale--complement (- default-text-scale--complement actual-delta))
       (message "Default font size is now %d" actual-new-height))))
@@ -115,7 +115,7 @@ default to which subsequent sizes would be reset."
   (setq default-text-scale--complement 0))
 
 (defun default-text-scale--update-for-new-frame (f)
-  "Recalculate the font size in new frames.
+  "Recalculate the font size in new frame F.
 This ensures new frames have the correct font size after the font
 has been set with `set-face-attribute'."
   (when (display-multi-font-p f)
