@@ -15,6 +15,8 @@ themes.
 It's handy for quickly adjusting the font size for readability or
 impromptu screen-sharing.
 
+**Note that as of Emacs 29, many users might prefer the built-in `global-text-scale-adjust` system.**
+
 ## Installation
 
 Install `default-text-scale` from the [MELPA](http://melpa.org)
